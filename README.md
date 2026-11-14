@@ -23,9 +23,9 @@
 ║ JAVA QUEST: THE BYTECODE CHRONICLES                     JVM LEVEL 12 / 12    ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║ HERO: Byte Paladin (Lv.6)              BOSS: The StackOverflow Dragon (BOSS) ║
-║ HP   [████████████████░░] 85/100       HP   [████████████░░░░░░] 340/500     ║
-║ MANA [██████████████████] 60/60        STATUS: [RECURSION LIMIT REACHED]     ║
-║ COMBO: ★★★★★ 5x STREAK (+25 DMG)                                             ║
+║ HP   [████████████████░░] 85/100           HP   [████████████░░░░░░] 340/500 ║
+║ MANA [██████████████████] 60/60            STATUS: [RECURSION LIMIT REACHED] ║
+║ COMBO: [5x STREAK] (+25 DMG)                                                 ║
 ║                                                                              ║
 ║           /\                                /\__                __/\         ║
 ║         _/  \_    *                         \_  \_  /\___/\  _/  _/          ║
@@ -40,10 +40,10 @@
 ║ [?] DESAFIO DE COMPILAÇÃO:                                                   ║
 ║ "Qual condição é obrigatória para evitar que uma recursão cause estouro?"    ║
 ║                                                                              ║
-║   [A] Declarar o método como final       [B] Definir caso base (Base Case) ✔ ║
-║   [C] Chamar Garbage Collector forçado   [D] Aumentar a Heap do sistema      ║
+║   [A] Declarar como final            [B] Definir caso base (Base Case) [*]   ║
+║   [C] Chamar Garbage Collector       [D] Aumentar a Heap do sistema          ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
-║ [1] Atacar (Spell)  [2] Breakpoint (Hint)  [3] Try-Catch Shield  [4] Inventário║
+║ [1] Atacar (Spell)   [2] Breakpoint   [3] Try-Catch Shield   [4] Inventário  ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -51,17 +51,17 @@
 
 ```text
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║ SALA DE TROFÉUS: BYTECODE BADGES & RECORDES                     [15 / 15] 🏆 ║
+║ SALA DE TROFÉUS: BYTECODE BADGES & RECORDES                     [15 / 15] ★  ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                              ║
-║     \(^o^)/   ★  ✦  ★        🏆 [FIRST COMMIT]       Derrote o NullPointer   ║
-║        /\      \ | /         🏆 [CLEAN CODE]         Acerte 10 combos seguidos║
-║      _/  \_    --*--         🏆 [TRY CATCH MASTER]   Bloqueie 500 de dano    ║
-║     /______\  [WINNER]       🏆 [BYTECODE ARCHMAGE]  Zere o jogo no Hardcore ║
-║    / (^_^) \    ||           🏆 [HOTSPOT OPTIMIZER]  Acumule mais de 1000 XP ║
-║   |  |[100%]|   || {;}       🏆 [POLYGLOT PRO]       Desbloqueie 3 talentos  ║
-║   |  | {;}  |  ====          🏆 [JLS SCHOLAR]        Exporte dossiê de estudo║
-║  (__/======\__)              🏆 [ZERO WARNINGS]      Vença sem usar poções   ║
+║     \(^o^)/   *  +  *        [★] FIRST COMMIT        Derrote o NullPointer   ║
+║        /\      \ | /         [★] CLEAN CODE          Acerte 10 combos        ║
+║      _/  \_    --*--         [★] TRY CATCH MASTER    Bloqueie 500 de dano    ║
+║     /______\  [WINNER]       [★] BYTECODE ARCHMAGE   Zere o jogo no Hardcore ║
+║    / (^_^) \    ||           [★] HOTSPOT OPTIMIZER   Acumule mais de 1000 XP ║
+║   |  |[100%]|   || {;}       [★] POLYGLOT PRO        Desbloqueie 3 talentos  ║
+║   |  | {;}  |  ====          [★] JLS SCHOLAR         Dossiê de estudo        ║
+║  (__/======\__)              [★] ZERO WARNINGS       Vença sem usar poções   ║
 ║                                                                              ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║ STATUS: Exit Code 0 [PASS] | Sintetizador de Áudio: Ativo (Chiptune 8-Bit)   ║
