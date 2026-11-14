@@ -1,0 +1,404 @@
+{
+  "play.sh": {
+    "mtime": 1791778467.273784,
+    "seen": 1791949401.2241395,
+    "ast_hash": "42169e473afc55216d466bce23bd7d20",
+    "semantic_hash": "42169e473afc55216d466bce23bd7d20"
+  },
+  "src/Main.java": {
+    "mtime": 1794614443.440162,
+    "seen": 1794629785.8819988,
+    "ast_hash": "6240e6bd105bef90cab3e48d4e199d0b",
+    "semantic_hash": "6240e6bd105bef90cab3e48d4e199d0b"
+  },
+  "src/game/Ansi.java": {
+    "mtime": 1794612959.4714098,
+    "seen": 1794629785.882009,
+    "ast_hash": "d717c3076554276a47fd5e388db2c1e1",
+    "semantic_hash": "d717c3076554276a47fd5e388db2c1e1"
+  },
+  "src/game/BattleRenderer.java": {
+    "mtime": 1794611435.9031787,
+    "seen": 1794629785.88202,
+    "ast_hash": "3c73c21316f220986706ae4b644d89b0",
+    "semantic_hash": "3c73c21316f220986706ae4b644d89b0"
+  },
+  "src/game/CharacterSprite.java": {
+    "mtime": 1791920143.4625673,
+    "seen": 1791949401.2241585,
+    "ast_hash": "3f2666e306f36664b15f5de43acc08f0",
+    "semantic_hash": "3f2666e306f36664b15f5de43acc08f0"
+  },
+  "src/game/Enemy.java": {
+    "mtime": 1794609720.6270058,
+    "seen": 1794629785.882033,
+    "ast_hash": "ab08686aacb11ec2a7b90c49e895da32",
+    "semantic_hash": "ab08686aacb11ec2a7b90c49e895da32"
+  },
+  "src/game/GameEngine.java": {
+    "mtime": 1794614438.8260906,
+    "seen": 1794629785.8820405,
+    "ast_hash": "9cbe82f23d985dfde76a6bb74cb8fa18",
+    "semantic_hash": "9cbe82f23d985dfde76a6bb74cb8fa18"
+  },
+  "src/game/Player.java": {
+    "mtime": 1794613184.3618271,
+    "seen": 1794629785.8820632,
+    "ast_hash": "66e536e04f5b49ff50ee44ecd426926a",
+    "semantic_hash": "66e536e04f5b49ff50ee44ecd426926a"
+  },
+  "src/game/Question.java": {
+    "mtime": 1794613117.6478138,
+    "seen": 1794629785.882067,
+    "ast_hash": "0eb946bb933c8790abbfb0abdaef85d1",
+    "semantic_hash": "0eb946bb933c8790abbfb0abdaef85d1"
+  },
+  "src/game/QuestionBank.java": {
+    "mtime": 1794611233.7601156,
+    "seen": 1794629785.8820705,
+    "ast_hash": "86220326f607e7fbf58543c141bf0c16",
+    "semantic_hash": "86220326f607e7fbf58543c141bf0c16"
+  },
+  "README.md": {
+    "mtime": 1794622338.3761551,
+    "seen": 1794629785.8821745,
+    "ast_hash": "17bbe747771ae475e0a95ad335cea870",
+    "semantic_hash": "17bbe747771ae475e0a95ad335cea870"
+  },
+  ".github/workflows/ci-cd.yml": {
+    "mtime": 1794549671.8102658,
+    "seen": 1794550324.1287286,
+    "ast_hash": "9bf49f13f0d7be41b6a8e394d0aaad31",
+    "semantic_hash": "9bf49f13f0d7be41b6a8e394d0aaad31"
+  },
+  "package-macos.sh": {
+    "mtime": 1794617187.9757543,
+    "seen": 1794629785.881973,
+    "ast_hash": "235a9463d2b3788e4860d3585bfa98b8",
+    "semantic_hash": "235a9463d2b3788e4860d3585bfa98b8"
+  },
+  "package.sh": {
+    "mtime": 1794617184.1256976,
+    "seen": 1794629785.8819792,
+    "ast_hash": "4e412be7c5c02bf8c8445b12ec9c3964",
+    "semantic_hash": "4e412be7c5c02bf8c8445b12ec9c3964"
+  },
+  "test.sh": {
+    "mtime": 1794548840.5566516,
+    "seen": 1794550324.1287858,
+    "ast_hash": "d60dccf3f7924df141f7fb928235bee6",
+    "semantic_hash": "d60dccf3f7924df141f7fb928235bee6"
+  },
+  "test/TestRunner.java": {
+    "mtime": 1794548833.8515496,
+    "seen": 1794550324.12879,
+    "ast_hash": "2967b26f1fdd82cc09dcfb523ed556f6",
+    "semantic_hash": "2967b26f1fdd82cc09dcfb523ed556f6"
+  },
+  "test/game/AnsiTest.java": {
+    "mtime": 1794549029.0065145,
+    "seen": 1794550324.1287944,
+    "ast_hash": "394dcb97022c2016bf897f6f07be4f9e",
+    "semantic_hash": "394dcb97022c2016bf897f6f07be4f9e"
+  },
+  "test/game/BattleRendererTest.java": {
+    "mtime": 1794548468.5479872,
+    "seen": 1794550324.1287982,
+    "ast_hash": "f65231d13a2c611e6175f2a2d49cb3ba",
+    "semantic_hash": "f65231d13a2c611e6175f2a2d49cb3ba"
+  },
+  "test/game/CharacterSpriteTest.java": {
+    "mtime": 1794549048.1918058,
+    "seen": 1794550324.1288028,
+    "ast_hash": "92de410c10cd46be2ed1c2cae894a648",
+    "semantic_hash": "92de410c10cd46be2ed1c2cae894a648"
+  },
+  "test/game/CombatTurnIntegrationTest.java": {
+    "mtime": 1794548663.2929552,
+    "seen": 1794550324.1288066,
+    "ast_hash": "a400efdc06ae0b60e59e8472eadc68c5",
+    "semantic_hash": "a400efdc06ae0b60e59e8472eadc68c5"
+  },
+  "test/game/ConcurrencyAndThreadSafetyIntegrationTest.java": {
+    "mtime": 1794548735.7370574,
+    "seen": 1794550324.1288104,
+    "ast_hash": "ece30e901ebbf7f6aaa3af946942a068",
+    "semantic_hash": "ece30e901ebbf7f6aaa3af946942a068"
+  },
+  "test/game/DebugPowersIntegrationTest.java": {
+    "mtime": 1794548681.8452375,
+    "seen": 1794550324.1288142,
+    "ast_hash": "5760957db0b609ff7c6af7926136ccff",
+    "semantic_hash": "5760957db0b609ff7c6af7926136ccff"
+  },
+  "test/game/EndToEndHeadlessSessionTest.java": {
+    "mtime": 1794548748.9042578,
+    "seen": 1794550324.1288197,
+    "ast_hash": "f07be4328166303f75c534467e64bbb7",
+    "semantic_hash": "f07be4328166303f75c534467e64bbb7"
+  },
+  "test/game/EnemyTest.java": {
+    "mtime": 1794548006.3779047,
+    "seen": 1794550324.1288235,
+    "ast_hash": "86954640311444c1fa4fc8c9427221c2",
+    "semantic_hash": "86954640311444c1fa4fc8c9427221c2"
+  },
+  "test/game/FullCampaignProgressionTest.java": {
+    "mtime": 1794548695.8284502,
+    "seen": 1794550324.1288276,
+    "ast_hash": "442815e31e1c5691c632e1511f80f220",
+    "semantic_hash": "442815e31e1c5691c632e1511f80f220"
+  },
+  "test/game/GameEngineLogicTest.java": {
+    "mtime": 1794548636.9235535,
+    "seen": 1794550324.1288314,
+    "ast_hash": "86b2152161187cf0e2d4ae6373f339d2",
+    "semantic_hash": "86b2152161187cf0e2d4ae6373f339d2"
+  },
+  "test/game/GameOverAndRetryIntegrationTest.java": {
+    "mtime": 1794548707.115622,
+    "seen": 1794550324.1288354,
+    "ast_hash": "33816954cbc4fd3260969bef45691fb5",
+    "semantic_hash": "33816954cbc4fd3260969bef45691fb5"
+  },
+  "test/game/MutationTargetsTest.java": {
+    "mtime": 1794548767.1065347,
+    "seen": 1794550324.1288393,
+    "ast_hash": "a35b5fa1b1e5e0907f0058880f07b48d",
+    "semantic_hash": "a35b5fa1b1e5e0907f0058880f07b48d"
+  },
+  "test/game/PlayerTest.java": {
+    "mtime": 1794548402.617981,
+    "seen": 1794550324.128843,
+    "ast_hash": "632c7b470f325f87acd26f8bdaea8ae7",
+    "semantic_hash": "632c7b470f325f87acd26f8bdaea8ae7"
+  },
+  "test/game/QuestionBankTest.java": {
+    "mtime": 1794548438.7265322,
+    "seen": 1794550324.1288474,
+    "ast_hash": "ba2bb56b11466cca0dd7e6626d7f1d45",
+    "semantic_hash": "ba2bb56b11466cca0dd7e6626d7f1d45"
+  },
+  "test/game/QuestionTest.java": {
+    "mtime": 1794548992.6659627,
+    "seen": 1794550324.1288512,
+    "ast_hash": "c9fb64d19891e7bc909945b551d1414b",
+    "semantic_hash": "c9fb64d19891e7bc909945b551d1414b"
+  },
+  "test/game/SystemInvariantsTest.java": {
+    "mtime": 1794548784.5678003,
+    "seen": 1794550324.1288545,
+    "ast_hash": "aa38e1dd198b785682c74f6395242bc3",
+    "semantic_hash": "aa38e1dd198b785682c74f6395242bc3"
+  },
+  "test/game/TestRunner.java": {
+    "mtime": 1794614807.1727686,
+    "seen": 1794629785.8821716,
+    "ast_hash": "84f6e38778ae7172893c441f183eaf9f",
+    "semantic_hash": "84f6e38778ae7172893c441f183eaf9f"
+  },
+  "src/game/Achievement.java": {
+    "mtime": 1794613038.960618,
+    "seen": 1794629785.8820024,
+    "ast_hash": "7b246c041616c43d55c80f8dc0cae8f1",
+    "semantic_hash": "7b246c041616c43d55c80f8dc0cae8f1"
+  },
+  "src/game/AchievementManager.java": {
+    "mtime": 1794613053.6568413,
+    "seen": 1794629785.8820057,
+    "ast_hash": "a047f99e838a769336bb87c4a0b7aac3",
+    "semantic_hash": "a047f99e838a769336bb87c4a0b7aac3"
+  },
+  "src/game/AudioEngine.java": {
+    "mtime": 1794551189.8433568,
+    "seen": 1794629785.8820124,
+    "ast_hash": "788b8b827ab12a5ed765092ec775e4c1",
+    "semantic_hash": "788b8b827ab12a5ed765092ec775e4c1"
+  },
+  "src/game/BattleAction.java": {
+    "mtime": 1794613780.8408816,
+    "seen": 1794629785.8820152,
+    "ast_hash": "9a9ca98307abae6478fea5ba71711958",
+    "semantic_hash": "9a9ca98307abae6478fea5ba71711958"
+  },
+  "src/game/BytecodeLab.java": {
+    "mtime": 1794613137.9335432,
+    "seen": 1794629785.8820233,
+    "ast_hash": "ef80f59c1dccad24a37a2fc854a219e8",
+    "semantic_hash": "ef80f59c1dccad24a37a2fc854a219e8"
+  },
+  "src/game/CombatConfig.java": {
+    "mtime": 1794613314.0547967,
+    "seen": 1794629785.8820298,
+    "ast_hash": "898adbea6ee033accae1beeb3f617cae",
+    "semantic_hash": "898adbea6ee033accae1beeb3f617cae"
+  },
+  "src/game/GameDifficulty.java": {
+    "mtime": 1794612115.4765303,
+    "seen": 1794629785.8820367,
+    "ast_hash": "5ad2967eb0b935e307172ba521237361",
+    "semantic_hash": "5ad2967eb0b935e307172ba521237361"
+  },
+  "src/game/I18n.java": {
+    "mtime": 1794614484.4817965,
+    "seen": 1794629785.8820438,
+    "ast_hash": "7aca0e09e12f9ee5817769bb684a85b6",
+    "semantic_hash": "7aca0e09e12f9ee5817769bb684a85b6"
+  },
+  "src/game/Inventory.java": {
+    "mtime": 1794551959.7380397,
+    "seen": 1794629785.8820472,
+    "ast_hash": "0a4a0b8b3c1b7893236d2b3b6269a412",
+    "semantic_hash": "0a4a0b8b3c1b7893236d2b3b6269a412"
+  },
+  "src/game/Item.java": {
+    "mtime": 1794551954.4539597,
+    "seen": 1794629785.882051,
+    "ast_hash": "fd537fbbaecaa9a79f1c58a9f58118b7",
+    "semantic_hash": "fd537fbbaecaa9a79f1c58a9f58118b7"
+  },
+  "src/game/LeaderboardEntry.java": {
+    "mtime": 1794613060.3889437,
+    "seen": 1794629785.882056,
+    "ast_hash": "8f5d60418e379cb41c9bec5f70256630",
+    "semantic_hash": "8f5d60418e379cb41c9bec5f70256630"
+  },
+  "src/game/LeaderboardManager.java": {
+    "mtime": 1794613075.7851777,
+    "seen": 1794629785.8820598,
+    "ast_hash": "f82ed3894b91c8cb95938a06bace8773",
+    "semantic_hash": "f82ed3894b91c8cb95938a06bace8773"
+  },
+  "src/game/SaveManager.java": {
+    "mtime": 1794614295.5554423,
+    "seen": 1794629785.8820739,
+    "ast_hash": "eed45e82a1dd0d2a8b61c7a5eb6352cd",
+    "semantic_hash": "eed45e82a1dd0d2a8b61c7a5eb6352cd"
+  },
+  "src/game/StandardTerminalIO.java": {
+    "mtime": 1794613327.7330046,
+    "seen": 1794629785.8820775,
+    "ast_hash": "9dc8beade0e76f1c4fc2cbf946b438da",
+    "semantic_hash": "9dc8beade0e76f1c4fc2cbf946b438da"
+  },
+  "src/game/Talent.java": {
+    "mtime": 1794611292.9250124,
+    "seen": 1794629785.882081,
+    "ast_hash": "c9305e23d39121085a2a15596f10da63",
+    "semantic_hash": "c9305e23d39121085a2a15596f10da63"
+  },
+  "src/game/TerminalIO.java": {
+    "mtime": 1794613319.874885,
+    "seen": 1794629785.8820844,
+    "ast_hash": "e4ad5f382a9db7d24b5341721178778b",
+    "semantic_hash": "e4ad5f382a9db7d24b5341721178778b"
+  },
+  "src/game/Theme.java": {
+    "mtime": 1794612853.9848058,
+    "seen": 1794629785.8820877,
+    "ast_hash": "19a5616e8e076879f6d9be6c762c28e4",
+    "semantic_hash": "19a5616e8e076879f6d9be6c762c28e4"
+  },
+  "src/game/VirtualTerminalIO.java": {
+    "mtime": 1794613336.4361367,
+    "seen": 1794629785.8820913,
+    "ast_hash": "c400bdd799ae2122ac0b4eaaa04c4ece",
+    "semantic_hash": "c400bdd799ae2122ac0b4eaaa04c4ece"
+  },
+  "src/game/state/BattleState.java": {
+    "mtime": 1794613380.1438003,
+    "seen": 1794629785.8820946,
+    "ast_hash": "10a3400b8fe821797f74f6af6961b4ce",
+    "semantic_hash": "10a3400b8fe821797f74f6af6961b4ce"
+  },
+  "src/game/state/GameContext.java": {
+    "mtime": 1794613354.4114096,
+    "seen": 1794629785.882097,
+    "ast_hash": "7c52ea0a2708747209ecb6af06927983",
+    "semantic_hash": "7c52ea0a2708747209ecb6af06927983"
+  },
+  "src/game/state/GameOverState.java": {
+    "mtime": 1794613392.5919893,
+    "seen": 1794629785.8820996,
+    "ast_hash": "a7bb6fd9622d4dcc3b6029766168a782",
+    "semantic_hash": "a7bb6fd9622d4dcc3b6029766168a782"
+  },
+  "src/game/state/GameState.java": {
+    "mtime": 1794613360.1744971,
+    "seen": 1794629785.8821034,
+    "ast_hash": "903f9e743baf42002b135e6093938af1",
+    "semantic_hash": "903f9e743baf42002b135e6093938af1"
+  },
+  "src/game/state/LevelTransitionState.java": {
+    "mtime": 1794613386.5278971,
+    "seen": 1794629785.8821068,
+    "ast_hash": "97f6505264f1efcb1e94ae01f99aa180",
+    "semantic_hash": "97f6505264f1efcb1e94ae01f99aa180"
+  },
+  "src/game/state/MainMenuState.java": {
+    "mtime": 1794613373.5537002,
+    "seen": 1794629785.88211,
+    "ast_hash": "cbc4183a7b3b565e3b7444600ecdb566",
+    "semantic_hash": "cbc4183a7b3b565e3b7444600ecdb566"
+  },
+  "src/game/state/StateMachine.java": {
+    "mtime": 1794613366.8485985,
+    "seen": 1794629785.8821135,
+    "ast_hash": "3f499393e88df56a2e3d6996e6ad7a61",
+    "semantic_hash": "3f499393e88df56a2e3d6996e6ad7a61"
+  },
+  "src/game/state/VictoryState.java": {
+    "mtime": 1794613399.0250869,
+    "seen": 1794629785.8821173,
+    "ast_hash": "db28c13251a185d21084054f64561c19",
+    "semantic_hash": "db28c13251a185d21084054f64561c19"
+  },
+  "test/game/ComprehensiveGameFlowValidationTest.java": {
+    "mtime": 1794614902.9802403,
+    "seen": 1794629785.882134,
+    "ast_hash": "0969d9acda8dc3e2b4e5b5d6d66d7913",
+    "semantic_hash": "0969d9acda8dc3e2b4e5b5d6d66d7913"
+  },
+  "test/game/ComprehensivePolishingFeaturesTest.java": {
+    "mtime": 1794614526.3804438,
+    "seen": 1794629785.8821373,
+    "ast_hash": "10c2b6e0738c63635f37c28e5f0d00f0",
+    "semantic_hash": "10c2b6e0738c63635f37c28e5f0d00f0"
+  },
+  "test/game/Phase3FeaturesTest.java": {
+    "mtime": 1794612423.8262513,
+    "seen": 1794629785.882157,
+    "ast_hash": "d2edafa10dc8fe38142046fc62a27be8",
+    "semantic_hash": "d2edafa10dc8fe38142046fc62a27be8"
+  },
+  "test/game/PolishingFeaturesTest.java": {
+    "mtime": 1794551632.568076,
+    "seen": 1794629785.8821623,
+    "ast_hash": "f8785c857009e7191a900ccc3b6ccc1c",
+    "semantic_hash": "f8785c857009e7191a900ccc3b6ccc1c"
+  },
+  "prompts/estudo_revisao.txt": {
+    "mtime": 1794617212.524117,
+    "seen": 1794629785.8821778,
+    "ast_hash": "8546e1a348c742a7e1eaeea32c98c0ba",
+    "semantic_hash": "8546e1a348c742a7e1eaeea32c98c0ba"
+  },
+  "prompts/git.txt": {
+    "mtime": 1794549787.4930193,
+    "seen": 1794629785.8821812,
+    "ast_hash": "ae9114a4ee1e813ded11df5f967f1d0c",
+    "semantic_hash": "ae9114a4ee1e813ded11df5f967f1d0c"
+  },
+  "prompts/polir.txt": {
+    "mtime": 1794614933.123703,
+    "seen": 1794629785.8821845,
+    "ast_hash": "96569f6ed7175bb0ed71ba69726882a5",
+    "semantic_hash": "96569f6ed7175bb0ed71ba69726882a5"
+  },
+  "prompts/test_options.txt": {
+    "mtime": 1794548877.8357663,
+    "seen": 1794629785.8821874,
+    "ast_hash": "f32f58623b4d1a0fdc39461670180a6c",
+    "semantic_hash": "f32f58623b4d1a0fdc39461670180a6c"
+  }
+}
