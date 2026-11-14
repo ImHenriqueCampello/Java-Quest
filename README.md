@@ -6,7 +6,6 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/ANÁLISES-EXTREMAMENTE%20POSITIVAS%20(100%25)-388e3c?style=for-the-badge&logo=steam&logoColor=white" alt="Steam Reviews" />
   <img src="https://img.shields.io/badge/GÊNERO-RPG%20%7C%20TURN--BASED%20%7C%20RETRO-1976d2?style=for-the-badge" alt="Genre" />
   <img src="https://img.shields.io/badge/PLATAFORMAS-WINDOWS%20%7C%20LINUX%20%7C%20MACOS-f57c00?style=for-the-badge" alt="Platforms" />
   <img src="https://img.shields.io/badge/ÁUDIO-CHIPTUNE%20PROCEDURAL%20(PCM)-7b1fa2?style=for-the-badge" alt="Audio" />
