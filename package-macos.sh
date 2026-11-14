@@ -22,7 +22,10 @@ MAIN_CLASS="Main"
 # Determinar versão (suporta argumento de linha de comando ou tag do GitHub Actions)
 VERSION="${1:-${GITHUB_REF_NAME:-1.0.0}}"
 VERSION="${VERSION#v}"
-if [[ ! "$VERSION" =~ ^[0-9] ]]; then
+VERSION="${VERSION#V}"
+if [[ "$VERSION" =~ ^([0-9]+(\.[0-9]+)*) ]]; then
+    VERSION="${BASH_REMATCH[1]}"
+else
     VERSION="1.0.0"
 fi
 APP_VERSION="$VERSION"

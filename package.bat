@@ -6,7 +6,7 @@ rem ============================================================================
 setlocal enabledelayedexpansion
 
 echo ================================================================================
-echo    JAVA QUEST: BUILD & DISTRIBUICAO AUTOMATIZADA COM JPACKAGE (WINDOWS)
+echo    JAVA QUEST: BUILD E DISTRIBUICAO AUTOMATIZADA COM JPACKAGE (WINDOWS)
 echo ================================================================================
 
 where javac >nul 2>nul
@@ -34,6 +34,20 @@ if "%APP_VERSION%"=="" (
     )
 )
 if "%APP_VERSION:~0,1%"=="v" set "APP_VERSION=%APP_VERSION:~1%"
+if "%APP_VERSION:~0,1%"=="V" set "APP_VERSION=%APP_VERSION:~1%"
+
+rem Remover sufixos nao-numericos como -beta, +build, etc.
+for /f "tokens=1 delims=-+" %%A in ("!APP_VERSION!") do set "APP_VERSION=%%A"
+
+rem Validar formato numerico obrigatorio para o jpackage no Windows (ex: 1.0.0)
+set "FIRST_CHAR=!APP_VERSION:~0,1!"
+set "IS_VALID_VERSION="
+for %%D in (0 1 2 3 4 5 6 7 8 9) do (
+    if "!FIRST_CHAR!"=="%%D" set "IS_VALID_VERSION=1"
+)
+if not defined IS_VALID_VERSION (
+    set "APP_VERSION=1.0.0"
+)
 
 set "BUILD_DIR=build"
 set "DIST_DIR=dist"
