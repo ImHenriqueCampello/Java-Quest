@@ -51,17 +51,17 @@
 
 ```text
 ╔══════════════════════════════════════════════════════════════════════════════╗
-║ SALA DE TROFÉUS: BYTECODE BADGES & RECORDES                     [15 / 15] ★  ║
+║ SALA DE TROFÉUS: BYTECODE BADGES & RECORDES                    [15 / 15] [*] ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║                                                                              ║
-║     \(^o^)/   *  +  *        [★] FIRST COMMIT        Derrote o NullPointer   ║
-║        /\      \ | /         [★] CLEAN CODE          Acerte 10 combos        ║
-║      _/  \_    --*--         [★] TRY CATCH MASTER    Bloqueie 500 de dano    ║
-║     /______\  [WINNER]       [★] BYTECODE ARCHMAGE   Zere o jogo no Hardcore ║
-║    / (^_^) \    ||           [★] HOTSPOT OPTIMIZER   Acumule mais de 1000 XP ║
-║   |  |[100%]|   || {;}       [★] POLYGLOT PRO        Desbloqueie 3 talentos  ║
-║   |  | {;}  |  ====          [★] JLS SCHOLAR         Dossiê de estudo        ║
-║  (__/======\__)              [★] ZERO WARNINGS       Vença sem usar poções   ║
+║     \(^o^)/   *  +  *        [*] FIRST COMMIT        Derrote o NullPointer   ║
+║        /\      \ | /         [*] CLEAN CODE          Acerte 10 combos        ║
+║      _/  \_    --*--         [*] TRY CATCH MASTER    Bloqueie 500 de dano    ║
+║     /______\  [WINNER]       [*] BYTECODE ARCHMAGE   Zere o jogo no Hardcore ║
+║    / (^_^) \    ||           [*] HOTSPOT OPTIMIZER   Acumule mais de 1000 XP ║
+║   |  |[100%]|   || {;}       [*] POLYGLOT PRO        Desbloqueie 3 talentos  ║
+║   |  | {;}  |  ====          [*] JLS SCHOLAR         Dossiê de estudo        ║
+║  (__/======\__)              [*] ZERO WARNINGS       Vença sem usar poções   ║
 ║                                                                              ║
 ╠══════════════════════════════════════════════════════════════════════════════╣
 ║ STATUS: Exit Code 0 [PASS] | Sintetizador de Áudio: Ativo (Chiptune 8-Bit)   ║
