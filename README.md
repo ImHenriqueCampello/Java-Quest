@@ -9,6 +9,7 @@
   <img src="https://img.shields.io/badge/GÊNERO-RPG%20%7C%20TURN--BASED%20%7C%20RETRO-1976d2?style=for-the-badge" alt="Genre" />
   <img src="https://img.shields.io/badge/PLATAFORMAS-WINDOWS%20%7C%20LINUX%20%7C%20MACOS-f57c00?style=for-the-badge" alt="Platforms" />
   <img src="https://img.shields.io/badge/ÁUDIO-CHIPTUNE%20PROCEDURAL%20(PCM)-7b1fa2?style=for-the-badge" alt="Audio" />
+  <img src="https://img.shields.io/badge/LICENÇA-MIT-green?style=for-the-badge" alt="License" />
 </p>
 
 ---
@@ -146,3 +147,9 @@ O jogo já vem com o runtime Java embutido em um pacote standalone — não é n
 1. Acesse a aba **Releases** aqui no GitHub.
 2. Baixe o pacote correspondente ao seu sistema (**Windows**, **Linux** ou **macOS**).
 3. Descompacte a pasta e dê dois cliques no inicializador do jogo para começar!
+
+---
+
+## 📄 Licença
+
+Distribuído sob a licença **MIT**. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
