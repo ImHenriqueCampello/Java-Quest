@@ -37,3 +37,6 @@ bin/
 .idea/**/usage.statistics.xml
 .idea/**/shelf/
 *.iws
+
+### Agent & Analysis Tools ###
+graphify-out/

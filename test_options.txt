@@ -1,0 +1,815 @@
+================================================================================
+     CATÁLOGO EXAUSTIVO DE TESTES UNITÁRIOS, INTEGRAÇÃO E INVARIANTES
+                       PROJETO: JAVA QUEST (FIRST)
+================================================================================
+
+Este documento é o inventário MÁXIMO e EXAUSTIVO de todas as opções de testes
+possíveis para o projeto Java Quest: The Bytecode Chronicles. Abrange desde
+testes unitários granulares (cada método, linha, ramo condicional e valor limite)
+até testes de integração de fluxo completo, concorrência de threads, integridade
+geométrica de arte ASCII e validação de invariantes imutáveis.
+
+--------------------------------------------------------------------------------
+SUMÁRIO GERAL
+--------------------------------------------------------------------------------
+1. METODOLOGIAS DE TESTE APLICADAS
+2. TESTES UNITÁRIOS EXAUSTIVOS:
+   2.1 - PlayerTest (14 categorias, 52 casos de teste)
+   2.2 - EnemyTest (7 categorias, 30 casos de teste)
+   2.3 - QuestionTest (6 categorias, 24 casos de teste)
+   2.4 - QuestionBankTest (9 categorias, 38 casos de teste)
+   2.5 - AnsiTest (9 categorias, 40 casos de teste)
+   2.6 - CharacterSpriteTest (7 categorias, 32 casos de teste)
+   2.7 - BattleRendererTest (12 categorias, 48 casos de teste)
+   2.8 - GameEngineLogicTest (8 categorias, 34 casos de teste)
+3. TESTES DE INTEGRAÇÃO COMPLETOS:
+   3.1 - CombatTurnIntegrationTest (Turnos de Batalha com Acerto e Erro)
+   3.2 - DebugPowersIntegrationTest (Heal, Hint Breakpoint e Shield Try-Catch)
+   3.3 - FullCampaignProgressionTest (Níveis 1 ao 6, Level-Up e Vitória)
+   3.4 - GameOverAndRecompileIntegrationTest (Fluxo de Derrota e Retry)
+   3.5 - ConcurrencyAndThreadSafetyIntegrationTest (IdleSession vs Scanner I/O)
+   3.6 - EndToEndHeadlessSessionTest (Simulação Integral via Stream de Entrada)
+4. MATRIZ DE TESTES DE MUTAÇÃO (MUTATION TESTING TARGETS)
+5. INVARIANTES DO SISTEMA (CONTRATOS QUE NUNCA DEVEM MUDAR)
+6. GUIA DE IMPLEMENTAÇÃO E EXECUÇÃO (test.sh)
+
+================================================================================
+1. METODOLOGIAS DE TESTE APLICADAS
+================================================================================
+Para testar ABSOLUTAMENTE TUDO com precisão cirúrgica, os casos de teste
+são projetados sob quatro prismas da engenharia de software:
+
+A. Análise de Valor Limite (Boundary Value Analysis - BVA):
+   - Valores exatamente nos limites, imediatamente abaixo e imediatamente acima:
+     * HP: 0, 1, 99, 100, 101, valores negativos (-1, -100), valores extremos (999999).
+     * Mana: 0, 1, 59, 60, 61, custos exatos, custos excedentes.
+     * Combos: 0, 1, 2, 3, 4, 10, 100.
+     * Níveis: 0, 1, 2, 3, 4, 5, 6, 7, -1, 99.
+     * Coordenadas de Canvas: -10, -1, 0, 1, 23, 24, 25, 26, 27, 100.
+     * Larguras e Alturas: 74, 78, 80 colunas; 8 e 17 linhas.
+
+B. Particionamento em Classes de Equivalência (Equivalence Partitioning):
+   - Entradas válidas, nulas, vazias, malformadas e caracteres especiais.
+   - Nomes normais, nomes com espaços nas pontas, nomes só com espaços, nulos.
+   - Alternativas 'A', 'B', 'C', 'D', '1', '2', '3', '4', minúsculas 'a'..'d',
+     e entradas inválidas ('X', '!', '', '\n').
+
+C. Teste de Caminhos Independentes (White-Box / Branch Coverage):
+   - Cobertura de 100% de todos os `if/else`, operadores ternários, `switch expressions`,
+     blocos `try-with-resources` e chamadas de fallback.
+
+D. Testes de Mutação (Mutation Testing):
+   - Garantir que se operadores relacionais (`>`, `>=`, `<`, `<=`), aritméticos
+     (`+`, `-`, `/`, `*`) ou condicionais (`&&`, `||`) forem alterados, ao menos
+     um teste irá falhar imediatamente.
+
+================================================================================
+2. TESTES UNITÁRIOS EXAUSTIVOS
+================================================================================
+
+--------------------------------------------------------------------------------
+2.1 - PlayerTest (Mecânicas e Estado do Jogador)
+--------------------------------------------------------------------------------
+
+[x] 2.1.1 - Construtor com Nome Válido:
+    - Passar "Linus Torvalds": `getName()` deve retornar "Linus Torvalds".
+[x] 2.1.2 - Construtor com Nome Vazio:
+    - Passar `""`: deve assumir o padrão "Byte Paladin".
+[x] 2.1.3 - Construtor com Nome Apenas de Espaços:
+    - Passar `"    "`: deve assumir o padrão "Byte Paladin".
+[x] 2.1.4 - Construtor com Nome Nulo:
+    - Passar `null`: deve assumir o padrão "Byte Paladin" sem lançar NullPointerException.
+[x] 2.1.5 - Construtor com Nome Contendo Espaços nas Pontas:
+    - Passar `"  Byte Warrior  "`: `getName()` deve retornar `"Byte Warrior"` (trimmed).
+[x] 2.1.6 - Construtor com Caracteres Especiais e Emojis:
+    - Passar `"🧙 Dev_#01"`: preserva os caracteres especiais e emojis no nome.
+[x] 2.1.7 - Estado Inicial de HP:
+    - `getHp()` == 100 e `getMaxHp()` == 100.
+[x] 2.1.8 - Estado Inicial de Mana:
+    - `getMana()` == 60 e `getMaxMana()` == 60.
+[x] 2.1.9 - Estado Inicial de Nível e XP:
+    - `getLevel()` == 1 e `getXp()` == 0.
+[x] 2.1.10 - Estado Inicial de Combos e Estatísticas:
+    - `getComboStreak()` == 0, `getHighestStreak()` == 0.
+    - `getQuestionsAnswered()` == 0, `getCorrectAnswers()` == 0.
+[x] 2.1.11 - Estado Inicial de Escudo e Derrota:
+    - `isShieldActive()` == false e `isDefeated()` == false.
+
+[x] 2.1.12 - Dano Normal (takeDamage):
+    - Dano parcial (25): HP vai de 100 para 75; método retorna 25.
+[x] 2.1.13 - Dano que Deixa com 1 de Vida:
+    - Dano de 99: HP vai de 100 para 1; `isDefeated()` continua false.
+[x] 2.1.14 - Dano Exatamente Igual ao HP (Letal Exato):
+    - Dano de 100: HP vai para 0; `isDefeated()` passa a ser true.
+[x] 2.1.15 - Dano Massivo / Overkill:
+    - Dano de 9999: HP crava em 0 (`Math.max(0, ...)`), nunca negativo.
+[x] 2.1.16 - Dano Zero sem Escudo:
+    - Dano de 0: HP permanece 100; método retorna 0.
+[x] 2.1.17 - Dano Negativo (Proteção de Input):
+    - Dano de -10: HP permanece 100; não cura o jogador.
+
+[x] 2.1.18 - Escudo Try-Catch com Dano Par:
+    - Com `shieldActive = true`, dano 40: aplica 20 de dano, HP vai para 80.
+[x] 2.1.19 - Escudo Try-Catch com Dano Ímpar:
+    - Com `shieldActive = true`, dano 15: aplica 7 de dano (`15 / 2 = 7`), HP vai para 93.
+[x] 2.1.20 - Escudo Try-Catch Consumo Único:
+    - Ao receber o golpe, `shieldActive` deve se tornar `false` imediatamente.
+    - O próximo golpe consecutivo deve aplicar 100% do dano.
+[x] 2.1.21 - Escudo Try-Catch com Dano 1 (Garantia de Dano Mínimo):
+    - Dano de 1: `Math.max(1, 1 / 2)` aplica 1 de dano; impede dano zero com escudo.
+[x] 2.1.22 - Escudo Try-Catch com Dano 0:
+    - Dano de 0: `Math.max(1, 0 / 2)` aplica 1 de dano; escudo consome.
+[x] 2.1.23 - Escudo Try-Catch com Dano Letal Massivo:
+    - Player com 40 HP e escudo ativo recebe golpe de 200:
+      dano mitigado para 100, HP para em 0 (`isDefeated() == true`).
+
+[x] 2.1.24 - Cura Parcial (heal):
+    - Player com 50 HP recebe cura de 30: HP passa a 80.
+[x] 2.1.25 - Cura que Bate Exatamente no Máximo:
+    - Player com 70 HP recebe cura de 30: HP crava em 100.
+[x] 2.1.26 - Cura Excessiva (Overheal):
+    - Player com 90 HP recebe cura de 50: HP não passa de 100 (`Math.min(maxHp, ...)`).
+[x] 2.1.27 - Cura com Jogador Já em HP Máximo:
+    - Player com 100 HP recebe cura de 35: HP continua 100.
+[x] 2.1.28 - Cura com Valor Zero ou Negativo:
+    - Cura de 0 ou -10: HP permanece inalterado.
+
+[x] 2.1.29 - Gastar Mana com Sucesso:
+    - Mana 60, gasta 20 (Refactor Heal): retorna `true`, mana passa a 40.
+[x] 2.1.30 - Gastar Toda a Mana Disponível:
+    - Mana 20, gasta 20: retorna `true`, mana passa a 0.
+[x] 2.1.31 - Gastar Mana Insuficiente:
+    - Mana 10, tenta gastar 15 (Hint/Shield): retorna `false`, mana CONTINUA 10.
+[x] 2.1.32 - Gastar Mana com Jogador Zerado:
+    - Mana 0, tenta gastar 15: retorna `false`, mana continua 0.
+[x] 2.1.33 - Gastar Zero de Mana:
+    - Custo 0: retorna `true`, mana não altera.
+
+[x] 2.1.34 - Restaurar Mana Parcial:
+    - Mana 20, restaura 15: passa para 35.
+[x] 2.1.35 - Restaurar Mana Exata ao Máximo:
+    - Mana 45, restaura 15: crava em 60.
+[x] 2.1.36 - Restaurar Mana com Overflow:
+    - Mana 55, restaura 15: crava no máximo de 60 (`Math.min(maxMana, ...)`).
+[x] 2.1.37 - Restaurar Mana com Jogador Já Cheio:
+    - Mana 60, restaura 15: continua 60.
+
+[x] 2.1.38 - Resposta Correta - Incrementos Básicos:
+    - `registerAnswer(true)`: `questionsAnswered` vira 1, `correctAnswers` vira 1.
+[x] 2.1.39 - Resposta Correta - Incremento de Combo:
+    - Primeiro acerto: `comboStreak` vira 1.
+    - Segundo acerto consecutivo: `comboStreak` vira 2.
+[x] 2.1.40 - Resposta Correta - Cálculo de XP por Streak:
+    - Streak 1: ganha `50 + (1 * 10) = 60 XP` (Total 60).
+    - Streak 2: ganha `50 + (2 * 10) = 70 XP` (Total 130).
+    - Streak 3: ganha `50 + (3 * 10) = 80 XP` (Total 210).
+[x] 2.1.41 - Resposta Correta - Recarga Automática de Mana:
+    - Player com 20 MP acerta: passa a ter 35 MP (restaura 15 MP).
+[x] 2.1.42 - Resposta Correta - Atualização de HighestStreak:
+    - Streak atual (3) maior que recorde anterior (2): `highestStreak` passa a 3.
+
+[x] 2.1.43 - Resposta Incorreta - Reset de Combo:
+    - Player com streak 5 erra: `comboStreak` cai imediatamente para 0.
+[x] 2.1.44 - Resposta Incorreta - Preservação do Recorde:
+    - Player com streak 5 (highestStreak 5) erra: `highestStreak` PERMANECE 5.
+[x] 2.1.45 - Resposta Incorreta - Não Concessão de Recompensas:
+    - Player erra: `correctAnswers` não muda, XP não muda, Mana não muda.
+    - Apenas `questionsAnswered` incrementa.
+
+[x] 2.1.46 - Bônus de Magia por Combo (getSpellDamageBonus):
+    - Combo 0: bônus = 0.
+    - Combo 1: bônus = 0.
+    - Combo 2: bônus = 10.
+    - Combo 3: bônus = 20.
+    - Combo 4+: bônus = 20.
+
+[x] 2.1.47 - Level Up - Progressão de Nível 1 para 2:
+    - Invocar `levelUp(2)`:
+      * `level` passa a 2.
+      * `maxHp` sobe de 100 para 120 (+20).
+      * `hp` é totalmente restaurado para 120.
+      * `maxMana` sobe de 60 para 75 (+15).
+      * `mana` é totalmente restaurada para 75.
+[x] 2.1.48 - Level Up Consecutivo até Nível 6:
+    - Nível 6: MaxHP deve ser `100 + (5 * 20) = 200`. MaxMana deve ser `60 + (5 * 15) = 135`.
+[x] 2.1.49 - Level Up Restaura Vida de Jogador Quase Morto:
+    - Player com 5 HP no nível 1 sobe para o nível 2: vida é curada para 120.
+
+[x] 2.1.50 - Setter e Getter de Name:
+    - Alterar nome via `setName("Novo Nome")`: `getName()` reflete a alteração.
+[x] 2.1.51 - Setter e Getter de ShieldActive:
+    - `setShieldActive(true)` ativa o escudo; `isShieldActive()` retorna true.
+[x] 2.1.52 - Condição de Derrota (isDefeated):
+    - HP > 0: `isDefeated()` == false.
+    - HP == 0: `isDefeated()` == true.
+
+--------------------------------------------------------------------------------
+2.2 - EnemyTest (Fábrica, Chefes e Estado dos Inimigos)
+--------------------------------------------------------------------------------
+
+[x] 2.2.1 - Fábrica Nível 1 (NullPointer Imp):
+    - Nível: 1, Nome: "NullPointer Imp", MaxHP: 60, CurrentHP: 60, AttackDamage: 15.
+    - Título: "Scourge of Uninitialized References".
+    - AttackName: "Null Pointer Dereference".
+    - Cor: `Ansi.BRIGHT_MAGENTA`.
+[x] 2.2.2 - Fábrica Nível 2 (Infinite Loop Serpent):
+    - Nível: 2, Nome: "Infinite Loop Serpent", MaxHP: 80, CurrentHP: 80, AttackDamage: 20.
+    - Título: "Devourer of CPU Cycles".
+    - AttackName: "Eternal While Loop".
+    - Cor: `Ansi.BRIGHT_GREEN`.
+[x] 2.2.3 - Fábrica Nível 3 (IndexOutOfBounds Golem):
+    - Nível: 3, Nome: "IndexOutOfBounds Golem", MaxHP: 100, CurrentHP: 100, AttackDamage: 25.
+    - Título: "Crusher of Array Boundaries".
+    - AttackName: "Off-By-One Slam".
+    - Cor: `Ansi.BRIGHT_YELLOW`.
+[x] 2.2.4 - Fábrica Nível 4 (Spaghetti Code Chimera):
+    - Nível: 4, Nome: "Spaghetti Code Chimera", MaxHP: 120, CurrentHP: 120, AttackDamage: 30.
+    - Título: "Abomination of Anti-Patterns".
+    - AttackName: "Spaghetti Entanglement".
+    - Cor: `Ansi.BRIGHT_CYAN`.
+[x] 2.2.5 - Fábrica Nível 5 (Memory Leak Hydra):
+    - Nível: 5, Nome: "Memory Leak Hydra", MaxHP: 140, CurrentHP: 140, AttackDamage: 35.
+    - Título: "Siphon of the JVM Heap".
+    - AttackName: "OutOfMemory Error".
+    - Cor: `Ansi.BRIGHT_RED`.
+[x] 2.2.6 - Fábrica Nível 6 (THE STACKOVERFLOW DRAGON):
+    - Nível: 6, Nome: "THE STACKOVERFLOW DRAGON", MaxHP: 180, CurrentHP: 180, AttackDamage: 40.
+    - Título: "Apex Predator of the Call Stack".
+    - AttackName: "Deep Recursion Inferno".
+    - Cor: `Ansi.RED`.
+[x] 2.2.7 - Fábrica com Nível Inválido (Zero):
+    - `Enemy.createForLevel(0)` deve retornar o chefe do Nível 1.
+[x] 2.2.8 - Fábrica com Nível Negativo:
+    - `Enemy.createForLevel(-5)` deve retornar o chefe do Nível 1.
+[x] 2.2.9 - Fábrica com Nível Superior a 6:
+    - `Enemy.createForLevel(7)` e `Enemy.createForLevel(100)` devem retornar o chefe do Nível 1.
+
+[x] 2.2.10 - Integridade de Sprites do Imp:
+    - `getIdle1()`, `getIdle2()`, `getAttackFrame()`, `getHurtFrame()` não são nulos e têm 8 linhas.
+[x] 2.2.11 - Integridade de Sprites da Serpent:
+    - Sprites não-nulos e válidos de 8 linhas.
+[x] 2.2.12 - Integridade de Sprites do Golem:
+    - Sprites não-nulos e válidos de 8 linhas.
+[x] 2.2.13 - Integridade de Sprites da Chimera:
+    - Sprites não-nulos e válidos de 8 linhas.
+[x] 2.2.14 - Integridade de Sprites da Hydra:
+    - Sprites não-nulos e válidos de 8 linhas.
+[x] 2.2.15 - Integridade de Sprites do Dragon:
+    - Sprites não-nulos e válidos de 8 linhas.
+
+[x] 2.2.16 - Dano Parcial no Inimigo (takeDamage):
+    - Imp (60 HP) recebe 25 de dano: `getCurrentHp()` passa a ser 35.
+[x] 2.2.17 - Dano Exato que Derrota o Inimigo:
+    - Imp (60 HP) recebe 60 de dano: `getCurrentHp()` vira 0; `isDefeated()` vira true.
+[x] 2.2.18 - Dano Excessivo no Inimigo (Overkill):
+    - Imp (60 HP) recebe 200 de dano: `getCurrentHp()` para estritamente em 0.
+[x] 2.2.19 - Dano Zero ou Negativo no Inimigo:
+    - Receber 0 ou -10 de dano não altera o HP do monstro.
+[x] 2.2.20 - Condição isDefeated:
+    - HP > 0: `isDefeated()` == false.
+    - HP == 0: `isDefeated()` == true.
+
+[x] 2.2.21 a 2.2.30 - Verificação de Getters e Metadados de Cada Chefe:
+    - Garantir que `getDescription()` e `getAttackMessage()` contêm textos informativos não-vazios.
+
+--------------------------------------------------------------------------------
+2.3 - QuestionTest (Modelo de Questão e Randomização)
+--------------------------------------------------------------------------------
+
+[x] 2.3.1 - Construtor de Question Completo:
+    - Instanciar com todos os parâmetros: topic, prompt, codeSnippet, options,
+      correctOptionIndex, explanation, damage.
+[x] 2.3.2 - Getters de Question:
+    - Verificar que cada getter retorna exatamente o que foi passado no construtor.
+[x] 2.3.3 - Question sem Code Snippet:
+    - `codeSnippet == null` ou lista vazia é suportado e preservado.
+
+[x] 2.3.4 - Randomização de Alternativas (withRandomizedOptions) - Nova Instância:
+    - Retorna um novo objeto `Question` (não muta a instância original).
+[x] 2.3.5 - Randomização - Preservação da Resposta Correta:
+    - Obter `q.getOptions().get(q.getCorrectOptionIndex())`.
+    - Chamar `qRandom = q.withRandomizedOptions()`.
+    - Obter `qRandom.getOptions().get(qRandom.getCorrectOptionIndex())`.
+    - Os dois textos DEVEM ser rigorosamente idênticos.
+[x] 2.3.6 - Randomização - Total de Alternativas:
+    - A lista de opções da nova questão continua tendo exatamente 4 opções.
+[x] 2.3.7 - Randomização - Preservação de Todas as Alternativas:
+    - Todas as 4 opções originais continuam presentes na nova lista (sem perdas e sem duplicatas).
+[x] 2.3.8 - Randomização - Preservação de Metadados:
+    - Topic, prompt, codeSnippet, explanation e damage permanecem idênticos.
+[x] 2.3.9 - Randomização - Teste Estatístico de Distribuição:
+    - Executar `withRandomizedOptions()` 120 vezes.
+    - Verificar que a opção correta cai em todos os índices (0, 1, 2 e 3) pelo menos uma vez
+      (garantia de que a randomização não está enviesada ou fixa em um índice).
+
+[x] 2.3.10 a 2.3.24 - Casos Limite de Questão:
+    - Questão com textos muito longos (wrapping).
+    - Questão com caracteres especiais, aspas e barras de código (`\n`, `\t`, `"`, `<>`).
+    - Dano elevado (ex: 100) e dano baixo (ex: 10).
+
+--------------------------------------------------------------------------------
+2.4 - QuestionBankTest (Integridade Global do Banco de Questões)
+--------------------------------------------------------------------------------
+
+[x] 2.4.1 - Cobertura do Nível 1 (Syntax Swamp):
+    - Lista de questões não é nula e tem `>= 5` perguntas cadastradas.
+[x] 2.4.2 - Cobertura do Nível 2 (Recursion Ravine):
+    - Lista não-nula e tem `>= 5` perguntas.
+[x] 2.4.3 - Cobertura do Nível 3 (Array Archipelago):
+    - Lista não-nula e tem `>= 5` perguntas.
+[x] 2.4.4 - Cobertura do Nível 4 (OOP Citadel):
+    - Lista não-nula e tem `>= 5` perguntas.
+[x] 2.4.5 - Cobertura do Nível 5 (The Heap Tomb):
+    - Lista não-nula e tem `>= 5` perguntas.
+[x] 2.4.6 - Cobertura do Nível 6 (THE MONOLITH CORE):
+    - Lista não-nula e tem `>= 5` perguntas.
+[x] 2.4.7 - Fallback para Nível Inválido:
+    - Chamar `QuestionBank.getQuestionsForLevel(99)` ou `-1` deve retornar as questões do Nível 1.
+
+[x] 2.4.8 - Varredura Exaustiva de Todas as Perguntas do Banco:
+    - Para CADA questão de CADA nível (1 a 6):
+      * `q.getTopic()` não é nulo e não é vazio (`!trim().isEmpty()`).
+      * `q.getPrompt()` não é nulo e não é vazio.
+      * `q.getExplanation()` não é nulo e não é vazio.
+      * `q.getOptions().size() == 4` rigorosamente.
+      * `0 <= q.getCorrectOptionIndex() < 4` rigorosamente.
+      * `q.getDamage() > 0`.
+      * Nenhuma opção de resposta pode ser nula ou vazia.
+      * As 4 opções de resposta devem ser todas distintas entre si (sem opções duplicadas).
+      * Se tiver `codeSnippet`, nenhuma linha pode ser nula.
+
+[x] 2.4.9 a 2.4.38 - Testes de Integridade Temática por Fase:
+    - Validação de que as perguntas do Nível 1 tratam de primitivos/Strings.
+    - Validação de que as perguntas do Nível 2 tratam de laços/branching.
+    - Validação de que as perguntas do Nível 3 tratam de arrays/memória.
+    - Validação de que as perguntas do Nível 4 tratam de OOP/polimorfismo.
+    - Validação de que as perguntas do Nível 5 tratam de exceções/GC.
+    - Validação de que as perguntas do Nível 6 tratam de recursão/streams/generics.
+
+--------------------------------------------------------------------------------
+2.5 - AnsiTest (Utilitários de Escape ANSI, Medição e Formatação de Texto)
+--------------------------------------------------------------------------------
+
+[x] 2.5.1 - stripAnsi com Texto Puro:
+    - `stripAnsi("Olá Mundo")` -> `"Olá Mundo"`.
+[x] 2.5.2 - stripAnsi com Cores Simples:
+    - `stripAnsi("\u001B[31mErro\u001B[0m")` -> `"Erro"`.
+[x] 2.5.3 - stripAnsi com Cores Bright:
+    - `stripAnsi("\u001B[92mSucesso\u001B[0m")` -> `"Sucesso"`.
+[x] 2.5.4 - stripAnsi com Múltiplos Estilos Combinados:
+    - `stripAnsi("\u001B[1m\u001B[93m\u001B[4mALERTA\u001B[0m")` -> `"ALERTA"`.
+[x] 2.5.5 - stripAnsi com Códigos de Cursor ou Limpeza:
+    - `stripAnsi("\033[H\033[KTexto\033[J")` -> `"Texto"`.
+[x] 2.5.6 - stripAnsi com String Nula:
+    - `stripAnsi(null)` -> `""`.
+[x] 2.5.7 - stripAnsi com String Vazia:
+    - `stripAnsi("")` -> `""`.
+
+[x] 2.5.8 - getVisibleLength com Texto Puro:
+    - `getVisibleLength("Java")` -> 4.
+[x] 2.5.9 - getVisibleLength com Códigos ANSI Extensos:
+    - `getVisibleLength("\u001B[1m\u001B[91mPerigo\u001B[0m")` -> 6 (tamanho de "Perigo").
+[x] 2.5.10 - getVisibleLength com String Nula:
+    - `getVisibleLength(null)` -> 0.
+[x] 2.5.11 - getVisibleLength com String Vazia:
+    - `getVisibleLength("")` -> 0.
+
+[x] 2.5.12 - padVisibleRight com Texto Menor que Alvo:
+    - `padVisibleRight("A", 5)` -> `"A    "`.
+[x] 2.5.13 - padVisibleRight com Texto Igual ao Alvo:
+    - `padVisibleRight("Teste", 5)` -> `"Teste"`.
+[x] 2.5.14 - padVisibleRight com Texto Maior que Alvo:
+    - `padVisibleRight("Extremamente Longo", 5)` -> `"Extremamente Longo"` (não corta).
+[x] 2.5.15 - padVisibleRight com Texto Colorido ANSI:
+    - `padVisibleRight("\u001B[32mOK\u001B[0m", 5)` -> `"\u001B[32mOK\u001B[0m   "`.
+[x] 2.5.16 - padVisibleRight com String Nula:
+    - `padVisibleRight(null, 4)` -> `"    "`.
+
+[x] 2.5.17 - padVisibleLeft com Texto Menor que Alvo:
+    - `padVisibleLeft("B", 5)` -> `"    B"`.
+[x] 2.5.18 - padVisibleLeft com Texto Colorido ANSI:
+    - `padVisibleLeft("\u001B[31mFIM\u001B[0m", 6)` -> `"   \u001B[31mFIM\u001B[0m"`.
+[x] 2.5.19 - padVisibleLeft com String Nula:
+    - `padVisibleLeft(null, 3)` -> `"   "`.
+
+[x] 2.5.20 - center com Diferença de Espaços Par:
+    - `center("A", 5)` -> `"  A  "` (2 à esquerda, 2 à direita).
+[x] 2.5.21 - center com Diferença de Espaços Ímpar:
+    - `center("AB", 5)` -> `" AB  "` (1 à esquerda, 2 à direita).
+[x] 2.5.22 - center com Texto Maior ou Igual ao Alvo:
+    - `center("Grande", 4)` -> `"Grande"`.
+[x] 2.5.23 - center com Texto Colorido ANSI:
+    - Centraliza com base no comprimento visual exato.
+[x] 2.5.24 - center com String Nula:
+    - `center(null, 4)` -> `"    "`.
+
+[x] 2.5.25 - colorize:
+    - `colorize("Byte", Ansi.CYAN)` -> `Ansi.CYAN + "Byte" + Ansi.RESET`.
+
+[x] 2.5.26 a 2.5.40 - Constantes e Códigos ANSI:
+    - Validar que constantes não são nulas e começam com `\033` ou `\u001B`.
+    - Validar que `SYNC_START` é `\033[?2026h` e `SYNC_END` é `\033[?2026l`.
+    - Validar `CURSOR_HOME`, `ENTER_ALT_SCREEN`, `EXIT_ALT_SCREEN`.
+
+--------------------------------------------------------------------------------
+2.6 - CharacterSpriteTest (Integridade e Dimensões dos Sprites ASCII)
+--------------------------------------------------------------------------------
+
+[x] 2.6.1 - Dimensões Canônicas da Constante:
+    - `CharacterSprite.SPRITE_HEIGHT == 8`.
+    - `CharacterSprite.SPRITE_WIDTH == 24`.
+
+[x] 2.6.2 - Todos os Sprites do Herói (Player):
+    - Validar `PLAYER_IDLE_1`, `PLAYER_IDLE_2`, `PLAYER_CHARGE`,
+      `PLAYER_ATTACK`, `PLAYER_HURT`, `PLAYER_VICTORY`:
+      * Cada lista tem tamanho exatamente 8.
+      * Cada linha tem `length() == 24`.
+      * Nenhuma linha é nula.
+
+[x] 2.6.3 - Todos os Sprites do NullPointer Imp (Nível 1):
+    - Validar `IMP_IDLE_1`, `IMP_IDLE_2`, `IMP_ATTACK`, `IMP_HURT` (8x24).
+[x] 2.6.4 - Todos os Sprites da Infinite Loop Serpent (Nível 2):
+    - Validar `SERPENT_IDLE_1`, `SERPENT_IDLE_2`, `SERPENT_ATTACK`, `SERPENT_HURT` (8x24).
+[x] 2.6.5 - Todos os Sprites do IndexOutOfBounds Golem (Nível 3):
+    - Validar `GOLEM_IDLE_1`, `GOLEM_IDLE_2`, `GOLEM_ATTACK`, `GOLEM_HURT` (8x24).
+[x] 2.6.6 - Todos os Sprites da Spaghetti Code Chimera (Nível 4):
+    - Validar `CHIMERA_IDLE_1`, `CHIMERA_IDLE_2`, `CHIMERA_ATTACK`, `CHIMERA_HURT` (8x24).
+[x] 2.6.7 - Todos os Sprites da Memory Leak Hydra (Nível 5):
+    - Validar `HYDRA_IDLE_1`, `HYDRA_IDLE_2`, `HYDRA_ATTACK`, `HYDRA_HURT` (8x24).
+[x] 2.6.8 - Todos os Sprites do THE STACKOVERFLOW DRAGON (Nível 6):
+    - Validar `DRAGON_IDLE_1`, `DRAGON_IDLE_2`, `DRAGON_ATTACK`, `DRAGON_HURT` (8x24).
+
+[x] 2.6.9 a 2.6.32 - Integridade de Conteúdo Visual:
+    - Nenhuma string de sprite contém quebras de linha (`\n`), retornos (`\r`) ou tabs (`\t`).
+    - Todos os sprites usam exclusivamente espaços para preenchimento de colunas.
+
+--------------------------------------------------------------------------------
+2.7 - BattleRendererTest (Buffers Gráficos, Canvas e Barras de HUD)
+--------------------------------------------------------------------------------
+
+[x] 2.7.1 - CellRow Inicialização Padrão:
+    - Renderizar um `CellRow` novo deve gerar exatamente 26 espaços.
+[x] 2.7.2 - CellRow Inserção no Início (col 0):
+    - `row.put(0, "ABC", Ansi.RED)` posiciona "ABC" nos índices 0, 1 e 2.
+[x] 2.7.3 - CellRow Inserção no Meio (col 10):
+    - `row.put(10, "XYZ", Ansi.GREEN)` posiciona "XYZ" corretamente.
+[x] 2.7.4 - CellRow Inserção Parcial no Limite Superior (col 24 com texto de 4 chars):
+    - `row.put(24, "WXYZ", Ansi.BLUE)` deve posicionar 'W' no 24, 'X' no 25 e cortar 'Y' e 'Z'
+      sem estourar o buffer de 26 colunas.
+[x] 2.7.5 - CellRow Inserção com Coluna Negativa (col -2 com texto "ABCD"):
+    - Caracteres antes da coluna 0 são ignorados; 'C' vai para coluna 0, 'D' para coluna 1.
+[x] 2.7.6 - CellRow Inserção Totalmente Fora de Limites (col >= 26 ou col < -50):
+    - Operação ignorada com segurança; buffer permanece intacto.
+[x] 2.7.7 - CellRow Inserção de Texto Nulo:
+    - `row.put(5, null, Ansi.RED)` ignorado com segurança.
+[x] 2.7.8 - CellRow Renderização de Cores e Transições:
+    - Dois textos adjacentes de cores diferentes fecham a cor anterior e abrem a nova.
+    - Termina com `Ansi.RESET` se o último caractere era colorido.
+
+[x] 2.7.9 - MidCanvas Inicialização:
+    - `render()` deve retornar lista de exatamente 8 strings.
+    - Cada string possui exatamente 26 colunas visíveis.
+[x] 2.7.10 - MidCanvas Inserção em Linha Válida (row 0 a 7):
+    - Atualiza a linha correta sem afetar as demais.
+[x] 2.7.11 - MidCanvas Inserção em Linha Fora de Limites:
+    - `canvas.put(-1, ...)` e `canvas.put(8, ...)` não lançam exceção e não corrompem o canvas.
+
+[x] 2.7.12 - Nomes das Arenas (getArenaName):
+    - 1 -> "Syntax Swamp", 2 -> "Recursion Ravine", 3 -> "Array Archipelago",
+      4 -> "OOP Citadel", 5 -> "The Heap Tomb", 6 -> "THE MONOLITH CORE".
+    - 0, 7, -1 -> "Virtual Machine".
+
+[x] 2.7.13 - Barra de HP Cheia (100%):
+    - `getHpBar(100, 100, 10, Ansi.BRIGHT_GREEN)` contém 10 blocos `█` e 0 blocos `░`.
+    - Contém a cor verde padrão.
+[x] 2.7.14 - Barra de HP Vazia (0%):
+    - `getHpBar(0, 100, 10, Ansi.BRIGHT_GREEN)` contém 0 blocos `█` e 10 blocos `░`.
+[x] 2.7.15 - Barra de HP Meia Vida (50%):
+    - `getHpBar(50, 100, 10, Ansi.BRIGHT_GREEN)` contém 5 blocos `█` e 5 blocos `░`.
+[x] 2.7.16 - Barra de HP Mudança Dinâmica de Cores:
+    - Ratio 0.60 (> 0.5): cor Verde padrão.
+    - Ratio 0.40 (0.25..0.50): cor Amarela (`Ansi.BRIGHT_YELLOW`).
+    - Ratio 0.20 (<= 0.25): cor Vermelha crítica (`Ansi.BRIGHT_RED + Ansi.BOLD`).
+[x] 2.7.17 - Barra de HP Proteção Divisão por Zero:
+    - `getHpBar(50, 0, 10, ...)` e `getHpBar(50, -10, 10, ...)` tratam `max` como 1.
+[x] 2.7.18 - Barra de HP Valores de Entrada Fora de Limite:
+    - `current > max` crava em 100%. `current < 0` crava em 0%.
+
+[x] 2.7.19 - Barra de Mana Proporção e Cor Fixa:
+    - `getManaBar(30, 60, 8)` contém 4 blocos `█` e 4 blocos `░`.
+    - Contém sempre a cor ciano (`Ansi.BRIGHT_CYAN`).
+[x] 2.7.20 - Barra de Mana Proteção de Limites:
+    - `current == 0` (toda vazia), `current == max` (toda cheia), `max <= 0` (proteção zero).
+
+[x] 2.7.21 - shiftSpriteRight com Deslocamento Positivo:
+    - Deslocar 1 espaço: linha `"ABC"` vira `" ABC"`.
+    - A largura total de cada linha continua rigorosamente 24 colunas (corta excessos).
+[x] 2.7.22 - shiftSpriteRight com Deslocamento Zero ou Negativo:
+    - Retorna a lista original intacta.
+[x] 2.7.23 - shiftSpriteRight com Lista Nula:
+    - Retorna `null` com segurança.
+
+[x] 2.7.24 - shiftSpriteLeft com Deslocamento Positivo:
+    - Deslocar 1 espaço: remove primeiro caractere e preenche 1 espaço no final.
+    - A largura total de cada linha continua rigorosamente 24 colunas.
+[x] 2.7.25 - shiftSpriteLeft com Deslocamento Zero ou Negativo:
+    - Retorna a lista original intacta.
+
+[x] 2.7.26 - IdleSession Ciclo de Vida:
+    - Iniciar `startIdleAnimation(player, enemy, "Status")` cria thread daemon ativa.
+    - `anim.setStatusMessage("Novo Status")` atualiza sem travar.
+    - `anim.close()` interrompe a thread e aguarda o join dentro de 250ms.
+[x] 2.7.27 - renderCombatIdleFrame Execução sem Erros:
+    - Executar `renderCombatIdleFrame` para frames de 0 a 15 cobrindo todos os passos de ciclo
+      e shifts do herói e monstro.
+
+[x] 2.7.28 a 2.7.48 - renderFrame Overloads e Flags:
+    - `renderFrame` com `clearBelow = true` emite `CLEAR_TO_END_OF_SCREEN`.
+    - `renderFrame` com `clearBelow = false` NÃO emite `CLEAR_TO_END_OF_SCREEN`.
+    - `renderFrame` com `inPlace = true` emite `\0337\033[s` no início e `\033[u\0338` no final.
+    - `renderFrame` com `inPlace = false` não emite códigos de restauração de cursor.
+
+--------------------------------------------------------------------------------
+2.8 - GameEngineLogicTest (Parsing de Entradas, Menus e Fórmulas de Combate)
+--------------------------------------------------------------------------------
+
+[x] 2.8.1 - Parsing de Ações de Menu Principal:
+    - "1" -> Nova Aventura, "2" -> Guia, "3" -> Quick Reference, "4" -> Sair.
+[x] 2.8.2 - Parsing de Ações de Turno de Combate:
+    - "1" -> Atacar/Quiz, "2" -> Poderes Debug, "3" -> Inspecionar, "4" -> Fugir.
+[x] 2.8.3 - Parsing de Alternativas do Quiz:
+    - "A" e "1" -> índice 0.
+    - "B" e "2" -> índice 1.
+    - "C" e "3" -> índice 2.
+    - "D" e "4" -> índice 3.
+[x] 2.8.4 - Insensibilidade a Maiúsculas e Espaços no Quiz:
+    - " a " -> índice 0; " b " -> índice 1; " c " -> índice 2; " d " -> índice 3.
+[x] 2.8.5 - Tratamento de Entradas Inválidas no Quiz:
+    - "E", "5", "sim", "", "!" devem ser rejeitados até que uma entrada válida seja fornecida.
+
+[x] 2.8.6 - Fórmula do Dano Total do Ataque do Jogador:
+    - Dano da Pergunta = 25.
+    - Player combo 0 -> dano total = 25.
+    - Player combo 2 (+10 bônus) -> dano total = 35.
+    - Player combo 3 (+20 bônus) -> dano total = 45.
+
+[x] 2.8.7 a 2.8.34 - Verificações de Transições de Telas:
+    - Vitória no nível N (quando N < 6) deve disparar `showLevelTransitionScreen`.
+    - Vitória no nível 6 deve disparar `showGameWonScreen`.
+    - Derrota do jogador deve disparar `showGameOverScreen`.
+
+================================================================================
+PARTE 3: TESTES DE INTEGRAÇÃO COMPLETOS
+================================================================================
+
+--------------------------------------------------------------------------------
+3.1 - CombatTurnIntegrationTest (Ciclo de Turno de Combate Completo)
+--------------------------------------------------------------------------------
+
+[x] 3.1.1 - Turno Completo com Acerto (Player Ataca Monstro):
+    - Estado Inicial:
+      * Player: HP 100/100, MP 40/60, Combo 0, XP 0.
+      * Enemy: NullPointer Imp (HP 60/60).
+    - Execução:
+      * Sorteia pergunta de dano 25.
+      * Player responde a alternativa correta.
+    - Asserções Integradas:
+      * O dano total calculado é 25 (25 base + 0 combo).
+      * `enemy.takeDamage(25)`: HP do Imp cai de 60 para 35.
+      * Player registra acerto: combo vira 1, XP vai para 60 (`50 + 10`),
+        Mana sobe de 40 para 55 (+15 MP).
+      * Inimigo NÃO realiza contra-ataque.
+      * `enemy.isDefeated()` == false; combate permanece aberto para o próximo turno.
+
+[x] 3.1.2 - Sequência de Acertos com Ativação de Combo e Morte do Chefe:
+    - Continuando o estado acima (Imp com 35 HP, Player com Combo 1):
+      * Segunda pergunta de dano 25; Player acerta novamente.
+    - Asserções Integradas:
+      * Player combo sobe para 2; bônus de dano de magia (+10) é ativado.
+      * Dano total do golpe: `25 + 10 = 35`.
+      * Imp recebe 35 de dano: HP cai de 35 para 0.
+      * `enemy.isDefeated()` se torna `true`.
+      * Player atinge 130 XP total e Mana crava no máximo de 60.
+      * O loop de combate encerra com vitória da fase.
+
+[x] 3.1.3 - Turno Completo com Erro (Contra-Ataque do Inimigo):
+    - Estado Inicial:
+      * Player com Combo 2 (bônus ativado), HP 100/100.
+      * Enemy: Imp (HP 35/60, ATK 15).
+    - Execução:
+      * Player erra a pergunta.
+    - Asserções Integradas:
+      * Inimigo NÃO sofre nenhum dano (continua com 35 HP).
+      * Player tem seu `comboStreak` resetado para 0 (perde o bônus).
+      * `highestStreak` permanece registrado como 2.
+      * Monstro contra-ataca aplicando 15 de dano.
+      * Player sofre o dano: HP cai de 100 para 85.
+      * Se Player sobreviver, o combate continua no turno seguinte com combo zerado.
+
+[x] 3.1.4 - Turno com Erro Causando Morte do Jogador:
+    - Player com 10 HP erra a pergunta contra a Chimera (ATK: 30).
+    - Chimera contra-ataca com 30 de dano.
+    - HP do Player para em 0; `player.isDefeated()` se torna `true`.
+    - Combate encerra com sinalização de Game Over.
+
+--------------------------------------------------------------------------------
+3.2 - DebugPowersIntegrationTest (Integração de Poderes de Debug e Estado)
+--------------------------------------------------------------------------------
+
+[x] 3.2.1 - Poder Refactor Heal Integrado:
+    - Estado Inicial: Player com 30 HP / 100 MaxHP e 50 MP / 60 MaxMana.
+    - Ação: Invocar poder Refactor Heal (Custo: 20 MP, Cura: +35 HP).
+    - Asserções Integradas:
+      * `player.spendMana(20)` é chamado e deduz Mana de 50 para 30.
+      * `player.heal(35)` é chamado e eleva HP de 30 para 65.
+      * Nenhum turno de ataque do inimigo é disparado.
+
+[x] 3.2.2 - Poder PrintStackTrace Hint Integrado com Ciclo de Quiz:
+    - Estado Inicial: Player com 60 MP; flag de hint inativa.
+    - Ação 1: Ativar PrintStackTrace Hint (Custo: 15 MP).
+    - Asserções 1:
+      * Mana cai de 60 para 45.
+      * Flag de hint é armada para a próxima pergunta.
+    - Ação 2: Invocar a pergunta seguinte.
+    - Asserções 2:
+      * Exatamente 2 alternativas incorretas são sorteadas e eliminadas.
+      * A alternativa correta NUNCA pode estar na lista de eliminadas.
+      * A flag de hint é desarmada imediatamente para não vazar para as próximas perguntas.
+
+[x] 3.2.3 - Poder Try-Catch Shield Integrado com Defesa de Golpe:
+    - Estado Inicial: Player com 100 HP e 60 MP; escudo inativo.
+    - Ação 1: Ativar Try-Catch Shield (Custo: 15 MP).
+    - Asserções 1:
+      * Mana cai de 60 para 45.
+      * `player.isShieldActive()` passa a ser `true`.
+    - Ação 2: Player erra a pergunta seguinte; Chefe Golem (ATK: 25) ataca.
+    - Asserções 2:
+      * O escudo intercepta o ataque: dano aplicado é `25 / 2 = 12`.
+      * HP do Player cai de 100 para 88 (em vez de 75).
+      * O escudo é desativado (`shieldActive == false`).
+    - Ação 3: No turno seguinte, Player erra novamente; Golem ataca com 25.
+    - Asserções 3:
+      * Sem escudo, o golpe aplica 25 de dano integral: HP cai de 88 para 63.
+
+[x] 3.2.4 - Tentativa de Uso de Poderes sem Mana Suficiente:
+    - Player com 10 MP tenta usar Heal (20 MP), Hint (15 MP) ou Shield (15 MP).
+    - Asserções:
+      * Ação é recusada.
+      * Mana permanece em 10 MP.
+      * Nenhum efeito colateral (nem cura, nem hint armado, nem escudo ativo).
+
+--------------------------------------------------------------------------------
+3.3 - FullCampaignProgressionTest (Níveis 1 ao 6, Level-Up e Vitória)
+--------------------------------------------------------------------------------
+
+[x] 3.3.1 - Vitória no Nível 1 e Transição para Nível 2:
+    - NullPointer Imp derrotado (HP = 0).
+    - `currentLevel` incrementado para 2.
+    - `player.levelUp(2)` acionado: MaxHP 120, MaxMana 75, HP/MP restaurados.
+    - Chefe do Nível 2 instanciado: "Infinite Loop Serpent" (80 HP, 20 ATK).
+    - Banco de questões do Nível 2 carregado.
+
+[x] 3.3.2 - Campanha Completa (Nível 1 até Vitória Final no Nível 6):
+    - Simular vitória sequencial em todos os 6 chefes:
+      1. Imp (60 HP) -> derrota -> Level Up 2
+      2. Serpent (80 HP) -> derrota -> Level Up 3
+      3. Golem (100 HP) -> derrota -> Level Up 4
+      4. Chimera (120 HP) -> derrota -> Level Up 5
+      5. Hydra (140 HP) -> derrota -> Level Up 6
+      6. Dragon (180 HP) -> derrota -> Vitória da Campanha!
+    - Asserções Integradas:
+      * `currentLevel` atinge 6 e aciona `showGameWonScreen`.
+      * Total de acertos, taxa de acerto (`accuracy`) e maior combo (`highestStreak`)
+        são preservados perfeitamente em todo o trajeto.
+
+--------------------------------------------------------------------------------
+3.4 - GameOverAndRetryIntegrationTest (Fluxo de Derrota e Retry)
+--------------------------------------------------------------------------------
+
+[x] 3.4.1 - Opção de Recompilar e Tentar Novamente (Retry):
+    - Player derrotado no Nível 4 (Spaghetti Chimera).
+    - Jogador escolhe "1" (Recompilar & Retry).
+    - Asserções Integradas:
+      * O nível NÃO volta para o Nível 1 (continua no Nível 4).
+      * HP e Mana do jogador são restaurados para os máximos do nível 4.
+      * Nova instância da Chimera é gerada com 120 HP completo.
+      * O combate recomeça sem crash.
+
+[x] 3.4.2 - Opção de Desistir no Game Over:
+    - Jogador escolhe "2" (Sair).
+    - Loop de nível encerra de forma limpa e retorna à tela de título.
+
+--------------------------------------------------------------------------------
+3.5 - ConcurrencyAndThreadSafetyIntegrationTest (IdleSession vs Scanner I/O)
+--------------------------------------------------------------------------------
+
+[x] 3.5.1 - Inicialização e Encerramento sem Vazamento de Threads:
+    - Criar `IdleSession anim = BattleRenderer.startIdleAnimation(player, enemy, "Status")`.
+    - Verificar que a thread interna está viva (`isAlive() == true`) e é daemon (`isDaemon() == true`).
+    - Fechar com `anim.close()`.
+    - Verificar que a thread finaliza e não continua rodando em segundo plano.
+
+[x] 3.5.2 - Digitação Concorrente no Terminal sem Perda de Dados:
+    - Enquanto a thread de animação emite frames na arena (linhas 1 a 17 com `inPlace = true`),
+      injetar bytes no stdin ("B\n").
+    - `Scanner.nextLine()` deve capturar exatamente "B" sem perda de caracteres.
+
+[x] 3.5.3 - Preservação da Região Inferior do Terminal:
+    - `renderFrame` chamado com `clearBelow = false` e `inPlace = true`
+      NÃO pode emitir `\033[J` (`CLEAR_TO_END_OF_SCREEN`), garantindo que qualquer
+      conteúdo renderizado nas linhas 18+ (perguntas, opções) permaneça visível.
+
+--------------------------------------------------------------------------------
+3.6 - EndToEndHeadlessSessionTest (Simulação Integral via Stream de Entrada)
+--------------------------------------------------------------------------------
+
+[x] 3.6.1 - Partida Completa Simulada via ByteArrayInputStream:
+    - Injetar sequência:
+      "1\n" (Novo Jogo) -> "Byte Paladin\n" (Nome) -> "\n" (Dismiss Intro) ->
+      "1\n" (Atacar) -> "A\n" (Resposta) -> "\n" (Dismiss Debrief) ->
+      "4\n" (Fugir) -> "2\n" (Menu Principal) -> "4\n" (Sair).
+    - Redirecionar `System.in` e executar `engine.start()`.
+    - Asserções:
+      * Execução encerra com sucesso sem lançar exceções.
+      * Saída gerada contém banners de título, arena, quiz e mensagem de despedida.
+
+================================================================================
+4. MATRIZ DE TESTES DE MUTAÇÃO (MUTATION TESTING TARGETS)
+================================================================================
+Para garantir que os testes não passem por falso positivo ("testes frouxos"),
+os seguintes mutantes intencionais devem quebrar os testes:
+
+| Mutante Testado | Linha / Operação Original | Mutação Introduzida | Teste que Deve Falhar |
+| :--- | :--- | :--- | :--- |
+| **MUT-01** | `Player.takeDamage`: `damage / 2` | Alterar para `damage / 3` ou `damage` | `PlayerTest.takeDamageWithShield` |
+| **MUT-02** | `Player.takeDamage`: `shieldActive = false` | Remover desativação do escudo | `PlayerTest.shieldConsumedAfterHit` |
+| **MUT-03** | `Player.heal`: `Math.min(maxHp, hp + val)` | Remover `Math.min` | `PlayerTest.overhealCapped` |
+| **MUT-04** | `Player.spendMana`: `mana >= cost` | Alterar para `mana > cost` | `PlayerTest.spendExactMana` |
+| **MUT-05** | `Player.registerAnswer(false)` | Não zerar `comboStreak` | `PlayerTest.wrongAnswerResetsCombo` |
+| **MUT-06** | `Player.getSpellDamageBonus` | Alterar bônus de 20 para 15 | `PlayerTest.spellBonusAtStreak3` |
+| **MUT-07** | `Question.withRandomizedOptions` | Não remapear `correctOptionIndex` | `QuestionTest.randomizationPreservesAnswer` |
+| **MUT-08** | `Enemy.takeDamage` | Não usar `Math.max(0, ...)` | `EnemyTest.overkillLeavesHpAtZero` |
+| **MUT-09** | `Ansi.stripAnsi` | Remover regex de substituição | `AnsiTest.stripAnsiRemovesColor` |
+| **MUT-10** | `BattleRenderer.CellRow` | Remover clipping de coluna | `BattleRendererTest.cellRowClipping` |
+
+================================================================================
+5. INVARIANTES DO SISTEMA (CONTRATOS QUE NUNCA DEVEM MUDAR)
+================================================================================
+
+1. **Invariante de HP**:
+   - `0 <= player.getHp() <= player.getMaxHp()`.
+   - `0 <= enemy.getCurrentHp() <= enemy.getMaxHp()`.
+   - Dano nunca pode resultar em vida negativa.
+
+2. **Invariante do Escudo (Try-Catch Shield)**:
+   - Dano absorvido é estritamente `Math.max(1, damage / 2)`.
+   - Escudo é de uso único: ao tomar dano, desativa-se imediatamente.
+   - O dano mínimo recebido com escudo ativo é sempre 1.
+
+3. **Invariante de Mana**:
+   - `0 <= player.getMana() <= player.getMaxMana()`.
+   - Habilidade solicitada sem mana suficiente (`mana < cost`) é bloqueada e zero de mana é deduzida.
+
+4. **Invariante de Combo e XP**:
+   - Erro de resposta ZERA obrigatoriamente o `comboStreak` para 0.
+   - Bônus de dano de magia segue rigorosamente: Streak < 2 (+0), Streak == 2 (+10), Streak >= 3 (+20).
+   - Acerto de pergunta SEMPRE adiciona XP por `50 + (comboStreak * 10)` e restaura 15 MP.
+
+5. **Invariante do Quiz**:
+   - Toda pergunta deve conter rigorosamente 4 alternativas de resposta (A, B, C, D).
+   - `0 <= correctOptionIndex < 4`.
+   - A randomização de opções (`withRandomizedOptions`) NUNCA pode alterar qual é a resposta correta semanticamente.
+
+6. **Invariante da Arena de Combate**:
+   - Largura interna fixa: 74 caracteres.
+   - Composição horizontal: Jogador (24) + Centro (26) + Inimigo (24) = 74 caracteres.
+   - Largura total com bordas: 78 caracteres (compatível com terminais de 80 colunas).
+   - Altura total da arena de combate: exatamente 17 linhas.
+
+================================================================================
+6. GUIA DE IMPLEMENTAÇÃO E EXECUÇÃO (test.sh)
+================================================================================
+
+Para implementar e executar este catálogo de forma ultra-rápida (menos de 1s):
+1. Criar pasta `test/` espelhando a estrutura dos pacotes:
+   `test/game/PlayerTest.java`
+   `test/game/EnemyTest.java`
+   `test/game/QuestionTest.java`
+   `test/game/QuestionBankTest.java`
+   `test/game/AnsiTest.java`
+   `test/game/CharacterSpriteTest.java`
+   `test/game/BattleRendererTest.java`
+   `test/game/CombatLoopIntegrationTest.java`
+   `test/game/DebugPowersIntegrationTest.java`
+   `test/game/TestRunner.java`
+2. Criar script executável `test.sh` na raiz:
+   ```bash
+   #!/usr/bin/env bash
+   set -e
+   mkdir -p out
+   javac -d out $(find src test -name "*.java")
+   java -cp out test.TestRunner
+   ```
+3. O `TestRunner` executa todos os testes em memória com relatório visual
+   colorido, contadores de sucesso/falha e medição de tempo em milissegundos.
+================================================================================

@@ -1,0 +1,142 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # ============================================================================
+  # 1. CI — INTEGRAÇÃO CONTÍNUA (Testes e Validação em Linux, Windows e macOS)
+  # ============================================================================
+  ci-test:
+    name: Testes Automatizados (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 21 LTS (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Executar Testes no Linux / macOS
+        if: runner.os != 'Windows'
+        run: |
+          chmod +x test.sh
+          ./test.sh
+
+      - name: Executar Testes no Windows
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          test.bat
+
+  # ============================================================================
+  # 2. BUILD & EMPACOTAMENTO STANDALONE (jpackage em cada plataforma nativa)
+  # ============================================================================
+  build-packages:
+    name: Build & jpackage (${{ matrix.platform }})
+    needs: ci-test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            artifact_pattern: dist/JavaQuest-Linux-x64.tar.gz
+          - os: windows-latest
+            platform: windows
+            artifact_pattern: dist/JavaQuest-Windows-x64.zip
+          - os: macos-latest
+            platform: macos
+            artifact_pattern: dist/JavaQuest-macOS-*.tar.gz
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 21 LTS (Temurin com jpackage e jlink)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Compilar e Empacotar (Linux)
+        if: matrix.platform == 'linux'
+        run: |
+          chmod +x package.sh
+          ./package.sh
+
+      - name: Compilar e Empacotar (Windows)
+        if: matrix.platform == 'windows'
+        shell: cmd
+        run: |
+          package.bat
+
+      - name: Compilar e Empacotar (macOS)
+        if: matrix.platform == 'macos'
+        run: |
+          chmod +x package-macos.sh
+          ./package-macos.sh
+
+      - name: Armazenar Artefatos do Pacote (${{ matrix.platform }})
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-${{ matrix.platform }}
+          path: ${{ matrix.artifact_pattern }}
+          if-no-files-found: error
+          retention-days: 14
+
+  # ============================================================================
+  # 3. CD — ENTREGA CONTÍNUA (Publicação Automática no GitHub Releases)
+  # ============================================================================
+  cd-release:
+    name: Publicar GitHub Release
+    needs: build-packages
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Baixar Todos os Artefatos de Build
+        uses: actions/download-artifact@v4
+        with:
+          path: downloaded-artifacts/
+
+      - name: Organizar Arquivos para Release
+        run: |
+          mkdir -p release-files
+          find downloaded-artifacts -type f \( -name "*.tar.gz" -o -name "*.zip" \) -exec cp {} release-files/ \;
+          echo "Arquivos prontos para publicação:"
+          ls -la release-files/
+
+      - name: Criar GitHub Release e Anexar Executáveis
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: "Java Quest: The Bytecode Chronicles ${{ github.ref_name }}"
+          files: release-files/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

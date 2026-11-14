@@ -1,0 +1,157 @@
+================================================================================
+     JAVA QUEST: THE BYTECODE CHRONICLES - GUIA DE CI/CD COM GITHUB ACTIONS
+================================================================================
+
+Este documento descreve a arquitetura, o funcionamento e as instruções do pipeline
+completo de CI/CD (Integração e Entrega Contínuas) implementado para o projeto
+Java Quest: The Bytecode Chronicles utilizando GitHub Actions e jpackage.
+
+--------------------------------------------------------------------------------
+1. RESUMO DA SOLUÇÃO E ARQUITETURA DE DISTRIBUIÇÃO
+--------------------------------------------------------------------------------
+O objetivo principal é que qualquer pessoa consiga baixar e jogar com apenas 
+DOIS CLIQUES, sem precisar instalar Java manualmente, abrir o terminal ou 
+digitar comandos.
+
+Como o Java Quest é um RPG de terminal interativo com sequências ANSI:
+- Linux:
+  Criado o launcher 'Play-JavaQuest.sh' com autodetecção de terminal e o atalho
+  'JavaQuest.desktop'. Ao receber dois cliques do mouse no gerenciador de arquivos,
+  detecta a ausência de terminal e invoca automaticamente o emulador de terminal
+  do sistema (konsole, gnome-terminal, ptyxis, xfce4-terminal, xterm, etc.).
+- Windows:
+  Criado o script 'package.bat' configurado com '--win-console' no jpackage e o
+  launcher 'Play-JavaQuest.bat'. O Windows Explorer abre automaticamente a janela
+  de Prompt de Comando / Windows Terminal ao dar dois cliques.
+- macOS:
+  Criado o script 'package-macos.sh' com o launcher 'Play-JavaQuest.command', que
+  é a extensão nativa do macOS reconhecida pelo Finder para abrir o Terminal.app.
+- Runtime Java Embutido:
+  Utiliza jpackage + jlink para gerar uma imagem customizada e mínima contendo
+  apenas 'java.base' (--strip-debug --no-man-pages --no-header-files), gerando
+  pacotes compactados de apenas ~18 MB.
+
+--------------------------------------------------------------------------------
+2. ARQUIVOS CRIADOS NO PROJETO
+--------------------------------------------------------------------------------
+1. .github/workflows/ci-cd.yml
+   Workflow oficial e unificado do GitHub Actions contendo as etapas de CI 
+   (testes automatizados), Build (jpackage nativo) e CD (GitHub Releases).
+
+2. package.sh
+   Script de compilação e empacotamento standalone para Linux (gera .tar.gz 
+   com runtime embutido e launchers de 2 cliques).
+
+3. package.bat
+   Script de compilação e empacotamento standalone para Windows (gera .zip 
+   com runtime embutido e suporte a console).
+
+4. package-macos.sh
+   Script de compilação e empacotamento standalone para macOS (gera .tar.gz 
+   com runtime embutido e launcher .command).
+
+5. test.sh
+   Script executável para rodar instantaneamente a suíte completa de 334 
+   testes em ambientes Unix (Linux e macOS).
+
+6. test.bat
+   Script nativo de execução dos testes para Windows via Prompt de Comando (cmd.exe).
+
+7. .gitignore
+   Atualizado para ignorar artefatos temporários de build ('build/', 'dist/', 'out/').
+
+--------------------------------------------------------------------------------
+3. COMO FUNCIONA O PIPELINE DO GITHUB ACTIONS (.github/workflows/ci-cd.yml)
+--------------------------------------------------------------------------------
+O workflow é dividido em três jobs encadeados e com permissões mínimas:
+
+A. Job: ci-test (CI — Integração Contínua)
+   - Disparo: Push ou Pull Request nas branches 'main' e 'master', ou tags 'v*'.
+   - Matriz: Executa simultaneamente em ubuntu-latest, windows-latest e macos-latest.
+   - Configura Java 21 LTS (Temurin) e executa a suíte de 334 testes automatizados.
+   - Se houver falha de compilação ou teste em qualquer SO, o pipeline é 
+     interrompido imediatamente (fail-fast: true).
+
+B. Job: build-packages (Build & Empacotamento jpackage)
+   - Dependência: Executa somente se 'ci-test' passar em todos os sistemas.
+   - Matriz:
+     * Linux (ubuntu-latest): Roda package.sh -> Gera 'dist/JavaQuest-Linux-x64.tar.gz'
+     * Windows (windows-latest): Roda package.bat -> Gera 'dist/JavaQuest-Windows-x64.zip'
+     * macOS (macos-latest): Roda package-macos.sh -> Gera 'dist/JavaQuest-macOS-*.tar.gz'
+   - Armazena os pacotes gerados como artefatos da Action com retenção de 14 dias
+     (permitindo baixar e testar executáveis em Pull Requests sem precisar gerar releases).
+
+C. Job: cd-release (CD — Entrega Contínua)
+   - Disparo: Executado EXCLUSIVAMENTE quando o evento for uma tag no formato 'v*' (ex: v1.0.0).
+   - Permissão: contents: write
+   - Baixa os artefatos gerados pelos três runners.
+   - Cria uma nova GitHub Release oficial identificada pela tag.
+   - Anexa automaticamente os 3 arquivos executáveis compactados.
+   - Gera notas de versão automáticas baseadas nos commits (generate_release_notes: true).
+
+--------------------------------------------------------------------------------
+4. COMO EXECUTAR UMA PUBLICAÇÃO CRIANDO UMA TAG
+--------------------------------------------------------------------------------
+Quando você decidir lançar uma nova versão oficial no GitHub:
+
+Passo 1: Fazer o commit e enviar para a branch principal
+   git add .
+   git commit -m "ci: pipeline de automacao CI/CD com jpackage e releases"
+   git push origin main
+
+Passo 2: Criar a tag de versão e enviá-la ao GitHub
+   git tag v1.0.0
+   git push origin v1.0.0
+
+Passo 3: Acompanhamento
+   O GitHub Actions detectará a tag 'v1.0.0', executará os testes em Linux,
+   Windows e macOS, gerará os pacotes com runtime embutido e publicará a Release
+   oficial com todos os downloads anexados.
+
+(Opcional: Você também pode testar o build sem criar tags acessando a aba 
+'Actions' no GitHub, selecionando 'CI/CD Pipeline' e clicando em 'Run workflow').
+
+--------------------------------------------------------------------------------
+5. ONDE ENCONTRAR OS EXECUTÁVEIS GERADOS
+--------------------------------------------------------------------------------
+1. Usuários Finais (Releases Oficiais):
+   Na aba 'Releases' do seu repositório no GitHub:
+   https://github.com/<seu-usuario>/<seu-repositorio>/releases
+
+2. Desenvolvedores (Builds de PR / Commits):
+   Na aba 'Actions' do GitHub, clicando na execução do workflow, no rodapé
+   da página sob a seção 'Artifacts':
+   - package-linux   (JavaQuest-Linux-x64.tar.gz)
+   - package-windows (JavaQuest-Windows-x64.zip)
+   - package-macos   (JavaQuest-macOS-*.tar.gz)
+
+3. Localmente (Sua Máquina):
+   Ao rodar './package.sh' (Linux), 'package.bat' (Windows) ou './package-macos.sh' (macOS),
+   os pacotes são organizados dentro da pasta local 'dist/'.
+
+--------------------------------------------------------------------------------
+6. PARTICULARIDADES E LIMITAÇÕES POR SISTEMA OPERACIONAL
+--------------------------------------------------------------------------------
+A. Linux:
+   - jpackage não faz compilação cruzada (exige rodar em Linux para gerar Linux,
+     o que o runner ubuntu-latest resolve perfeitamente).
+   - Gerenciadores de arquivos gráficos variam no comportamento ao clicar em
+     scripts shell (.sh). O launcher 'Play-JavaQuest.sh' contorna isso checando
+     se há um terminal ativo; se não houver, abre o terminal do sistema 
+     (gnome-terminal, konsole, etc.). O arquivo 'JavaQuest.desktop' também é fornecido.
+
+B. Windows:
+   - O jpackage requer a flag '--win-console' para que o executável não suprima
+     a entrada/saída de texto no terminal. Isso já está configurado no 'package.bat'.
+   - Binários baixados da web sem certificado pago de assinatura digital (EV Code Signing)
+     podem disparar o aviso de segurança do Windows SmartScreen na primeira vez
+     (basta o usuário clicar em 'Mais informações' -> 'Executar assim mesmo').
+
+C. macOS:
+   - O Gatekeeper do macOS bloqueia aplicativos baixados da internet que não 
+     possuam assinatura paga da Apple Developer ID e Notarization.
+   - O arquivo com extensão '.command' contorna isso de forma simples: na primeira 
+     execução, o usuário clica com o botão direito (Control + Clique) -> 'Abrir'.
+     Nas próximas vezes, basta dar dois cliques comuns.
+   - Arquiteturas: O runner 'macos-latest' gera binários para Apple Silicon (arm64).
+================================================================================

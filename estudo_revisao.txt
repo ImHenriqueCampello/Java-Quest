@@ -1,0 +1,31 @@
+================================================================================
+             JAVA QUEST: RELATÓRIO PÓS-JOGO DE ESTUDO E REVISÃO                 
+================================================================================
+Hero: Byte Paladin
+Data: 2026-11-13T21:09:01.716945908
+Total de Erros a Revisar: 1
+================================================================================
+
+--------------------------------------------------------------------------------
+QUESTÃO 1 | Nível 1 | Tópico: Final Keyword | Dificuldade: ★★☆☆☆ [Iniciante] | Tags: Final Keyword, strings, pool, memoria, jvm
+--------------------------------------------------------------------------------
+Pergunta: What is the effect of the 'final' keyword on a variable?
+
+Código-Fonte:
+  01 | final double PI = 3.14159;
+  02 | // PI = 3.14; // ?
+
+Alternativas:
+  [A] The variable is deleted by garbage collection immediately. [SUA ESCOLHA]
+  [B] The variable can only be assigned once and cannot be changed. [CORRETA]
+  [C] The variable is converted to a String.
+  [D] The variable becomes private to the class.
+
+Explicação Oficial:
+  The 'final' keyword prevents reassignment. Once initialized, its value cannot be modified.
+Referência da Especificação Oficial:
+  JLS §4.12.4 (final Variables)
+
+================================================================================
+Continue praticando! A maestria em Java se constrói na depuração.
+================================================================================
