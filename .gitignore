@@ -40,3 +40,6 @@ bin/
 
 ### Agent & Analysis Tools ###
 graphify-out/
+
+### Runtime Exports ###
+/estudo_revisao.txt
